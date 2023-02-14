@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -13,6 +14,7 @@ public class RiskCalculatorTest {
     private RiskCalculator calculator;
 
     private final BigDecimal DEFAULT_RISK_PER_TRADE = new BigDecimal(Double.toString(0.01));
+    private final BigDecimal DEFAULT_MAX_CAPITAL_AT_RISK = new BigDecimal(Double.toString(0.3));
     private final BigDecimal CUSTOMIZED_RISK_PER_TRADE = new BigDecimal(Double.toString(0.05));
 
     @BeforeEach
@@ -22,24 +24,32 @@ public class RiskCalculatorTest {
 
     @Test
     void givenANewCalculator_ThenTotalCapitalIsSetToZero() {
-        assertEquals(calculator.getTotalCapital(), new BigDecimal(Double.toString(0d)));
+        assertEquals(new BigDecimal(Double.toString(0d)).setScale(2, RoundingMode.HALF_UP), calculator.getTotalCapital());
     }
 
     @Test
     void givenACalculator_ThenTotalCapitalCanBeSet() {
-        BigDecimal newCapital = new BigDecimal(Double.toString(4300d));
+        BigDecimal newCapital = new BigDecimal(Double.toString(4300d))
+                .setScale(2, RoundingMode.HALF_UP);
         calculator.setTotalCapital(4300.00);
-        assertEquals(calculator.getTotalCapital(), newCapital);
+        assertEquals(newCapital, calculator.getTotalCapital());
     }
 
     @Test
-    void givenATotalCapital_ThenRiskPerTradeIsSetAtOnePercentByDefault() {
-        assertEquals(calculator.getRiskPerTrade(), DEFAULT_RISK_PER_TRADE);
+    void givenANewCalculator_ThenRiskPerTradeIsSetAtOnePercentByDefault() {
+        assertEquals(DEFAULT_RISK_PER_TRADE, calculator.getRiskPerTrade());
     }
 
     @Test
     void givenACalculator_ThenRiskPerTradeCanBeSet() {
         calculator.setRiskPerTrade(0.05);
-        assertEquals(calculator.getRiskPerTrade(), CUSTOMIZED_RISK_PER_TRADE);
+        assertEquals(CUSTOMIZED_RISK_PER_TRADE, calculator.getRiskPerTrade());
+    }
+
+    @Test
+    void givenANewCalculator_ThenMaxCapitalAtRiskIsSetAt30PercentOfTheCapitalByDefault() {
+        calculator.setTotalCapital(1000d);
+        BigDecimal capitalAtRisk = new BigDecimal(Double.toString(300d)).setScale(2, RoundingMode.HALF_UP);
+        assertEquals(capitalAtRisk, calculator.getMaxCapitalAtRisk());
     }
 }
