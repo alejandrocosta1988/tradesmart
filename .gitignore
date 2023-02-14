@@ -1,4 +1,5 @@
 .mvn/
+*.jpg
 
 HELP.md
 target/
