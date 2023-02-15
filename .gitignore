@@ -1,5 +1,6 @@
 .mvn/
 *.jpg
+*.png
 
 HELP.md
 target/
