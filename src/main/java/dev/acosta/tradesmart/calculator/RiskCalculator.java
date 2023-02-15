@@ -1,6 +1,7 @@
 package dev.acosta.tradesmart.calculator;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 
 public class RiskCalculator {
@@ -9,6 +10,9 @@ public class RiskCalculator {
             .setScale(2, RoundingMode.HALF_UP);
     private BigDecimal riskPerTrade = new BigDecimal(Double.toString(0.01));
     private BigDecimal maxCapitalAtRisk = new BigDecimal(Double.toString(0.3));
+
+    private BigDecimal enterPrice;
+    private BigDecimal stopLoss;
 
     public BigDecimal getTotalCapital() {
         return totalCapital;
@@ -30,5 +34,19 @@ public class RiskCalculator {
     public BigDecimal getMaxCapitalAtRisk() {
         return maxCapitalAtRisk.multiply(totalCapital)
                 .setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public void setEnterPrice(double price) {
+        enterPrice = new BigDecimal(Double.toString(price)).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public void setStopLoss(double loss) {
+        stopLoss = new BigDecimal(Double.toString(loss)).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public BigDecimal calculatePossibleLoss() {
+        BigDecimal priceDifference = enterPrice.subtract(stopLoss).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal numberOfPositions = getMaxCapitalAtRisk().divideToIntegralValue(enterPrice);
+        return priceDifference.multiply(numberOfPositions);
     }
 }
