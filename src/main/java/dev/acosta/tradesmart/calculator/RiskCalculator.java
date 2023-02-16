@@ -46,7 +46,12 @@ public class RiskCalculator {
 
     public BigDecimal calculatePossibleLoss() {
         BigDecimal priceDifference = enterPrice.subtract(stopLoss).setScale(2, RoundingMode.HALF_UP);
-        BigDecimal numberOfPositions = getMaxCapitalAtRisk().divideToIntegralValue(enterPrice);
+        BigDecimal capitalAtRisk = getTotalCapital().multiply(riskPerTrade).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal numberOfPositions = capitalAtRisk.divideToIntegralValue(priceDifference);
+        BigDecimal totalCost = priceDifference.multiply(numberOfPositions).setScale(2, RoundingMode.HALF_UP);
+        if (getMaxCapitalAtRisk().compareTo(totalCost) > 0)
+            return priceDifference.multiply(numberOfPositions);
+        numberOfPositions = getMaxCapitalAtRisk().divideToIntegralValue(enterPrice);
         return priceDifference.multiply(numberOfPositions);
     }
 }

@@ -61,4 +61,15 @@ public class RiskCalculatorTest {
         BigDecimal possibleLoss = new BigDecimal(Double.toString(7.50)).setScale(2, RoundingMode.HALF_UP);
         assertEquals(possibleLoss, calculator.calculatePossibleLoss());
     }
+
+    @Test
+    void givenAnEnterPriceAndStopLossAndTotalCapital_IfMaxCapitalAtRiskIsHigherThanTotalCost_ThenPossibleLossIsCalculatedByRiskPerTrade() {
+        calculator.setEnterPrice(32.01);
+        calculator.setStopLoss(30.45);
+        calculator.setTotalCapital(5000d);
+        BigDecimal possibleLoss = new BigDecimal(Double.toString(50.00)).setScale(2, RoundingMode.HALF_UP);
+        assertEquals(possibleLoss, calculator.calculatePossibleLoss());
+    }
+
+
 }
