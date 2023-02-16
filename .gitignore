@@ -1,6 +1,7 @@
 .mvn/
 *.jpg
 *.png
+.DS_Store
 
 HELP.md
 target/
