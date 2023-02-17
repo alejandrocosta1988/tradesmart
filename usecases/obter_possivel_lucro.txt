@@ -1,19 +1,19 @@
-Obtenção da possível perda em uma operação
+Obtenção do possível lucro em uma operação
 
 Nível do Objetivo: Nível do Mar
 
 Cenário Principal de Sucesso (CPS)
 
-1. O usuário acessa a calculadora e fornece os dados de capital total, preço de entrada, preço de loss
+1. O usuário acessa a calculadora e fornece os dados de capital total, preço de entrada, preço alvo
 2. O usuário solicita detalhes sobre a possível operação
 3. O sistema calcula os valores de capital máximo de risco (30% do capital total) e o risco recomendado por operação (1% do capital total)
 4. O sistema calcula a quantidade de posições recomendada para executar a operação com base no risco de 1% e calcula o custo total da operação
 5. O sistema verifica se o custo total é maior ou menor que o capital máximo em risco
-6. O sistema apresenta a quantidade de posições recomendada para a operação e a possível perda com a operação
+6. O sistema apresenta a quantidade de posições recomendada para a operação e o possível lucro com a operação
 
 Extensões:
 5a: Custo total da operação menor que capital máximo de risco
-        .1: O sistema calcula a perda possível com base na quantidade de posições recomendada para a operação a partir do risco de 1% do capital
+        .1: O sistema calcula o lucro possível com base na quantidade de posições recomendada para a operação a partir do risco de 1% do capital
 5b: Custo total da operação é superior ao capital máximo de risco
         .1: O sistema calcula a quantidade de posições recomendada para a operação com base no capital máximo de risco
-        .2: O sistema calcula a perda possível com base na quantidade de posições a partir do capital máximo de risco
+        .2: O sistema calcula o lucro possível com base na quantidade de posições a partir do capital máximo de risco
