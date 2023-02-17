@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class RiskCalculatorTest {
 
@@ -66,8 +65,8 @@ public class RiskCalculatorTest {
     void givenAnEnterPriceAndStopLossAndTotalCapital_IfMaxCapitalAtRiskIsHigherThanTotalCost_ThenPossibleLossIsCalculatedByRiskPerTrade() {
         calculator.setEnterPrice(32.01);
         calculator.setStopLoss(30.45);
-        calculator.setTotalCapital(5000d);
-        BigDecimal possibleLoss = new BigDecimal(Double.toString(50.00)).setScale(2, RoundingMode.HALF_UP);
+        calculator.setTotalCapital(1000d);
+        BigDecimal possibleLoss = new BigDecimal(Double.toString(9.36)).setScale(2, RoundingMode.HALF_UP);
         assertEquals(possibleLoss, calculator.calculatePossibleLoss());
     }
 

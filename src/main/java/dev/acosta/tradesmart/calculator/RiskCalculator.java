@@ -1,7 +1,6 @@
 package dev.acosta.tradesmart.calculator;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 
 public class RiskCalculator {
@@ -9,6 +8,7 @@ public class RiskCalculator {
     private BigDecimal totalCapital = new BigDecimal(Double.toString(0d))
             .setScale(2, RoundingMode.HALF_UP);
     private BigDecimal riskPerTrade = new BigDecimal(Double.toString(0.01));
+    private BigDecimal capitalAtRisk;
     private BigDecimal maxCapitalAtRisk = new BigDecimal(Double.toString(0.3));
 
     private BigDecimal enterPrice;
@@ -21,6 +21,11 @@ public class RiskCalculator {
     public void setTotalCapital(double newCapital) {
         totalCapital = new BigDecimal(Double.toString(newCapital))
                 .setScale(2, RoundingMode.HALF_UP);
+        setCapitalAtRisk(riskPerTrade);
+    }
+
+    private void setCapitalAtRisk(BigDecimal riskPerTrade) {
+        capitalAtRisk = totalCapital.multiply(riskPerTrade).setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getRiskPerTrade() {
@@ -45,13 +50,18 @@ public class RiskCalculator {
     }
 
     public BigDecimal calculatePossibleLoss() {
-        BigDecimal priceDifference = enterPrice.subtract(stopLoss).setScale(2, RoundingMode.HALF_UP);
-        BigDecimal capitalAtRisk = getTotalCapital().multiply(riskPerTrade).setScale(2, RoundingMode.HALF_UP);
-        BigDecimal numberOfPositions = capitalAtRisk.divideToIntegralValue(priceDifference);
-        BigDecimal totalCost = priceDifference.multiply(numberOfPositions).setScale(2, RoundingMode.HALF_UP);
-        if (getMaxCapitalAtRisk().compareTo(totalCost) > 0)
-            return priceDifference.multiply(numberOfPositions);
-        numberOfPositions = getMaxCapitalAtRisk().divideToIntegralValue(enterPrice);
-        return priceDifference.multiply(numberOfPositions);
+        BigDecimal maxCapital = getMaxCapitalAtRisk();
+        BigDecimal positionSizeByRisk = capitalAtRisk.divideToIntegralValue(enterPrice.subtract(stopLoss));
+        BigDecimal positionSizeByCapital = maxCapital.divideToIntegralValue(enterPrice);
+        BigDecimal totalCostByRisk = enterPrice.multiply(positionSizeByRisk);
+        if (totalCostByRisk.compareTo(maxCapital) < 0) {
+            return enterPrice.subtract(stopLoss).multiply(positionSizeByRisk);
+        }
+        return enterPrice.subtract(stopLoss).multiply(positionSizeByCapital);
     }
+
+    private BigDecimal getPriceDifference(BigDecimal buyPrice, BigDecimal sellPrice) {
+        return sellPrice.subtract(buyPrice).setScale(2, RoundingMode.HALF_UP);
+    }
+
 }
