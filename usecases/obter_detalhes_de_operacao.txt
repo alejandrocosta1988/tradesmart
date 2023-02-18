@@ -1,0 +1,39 @@
+Obtenção de detalhes de operação
+
+Nível do Objetivo: Nível do Mar
+
+Cenário Principal de Sucesso (CPS)
+
+1. O usuário acessa a calculadora e informa o capital total, preço de entrada, stop loss e preço alvo
+2. O usuário solicita detalhes sobre a possível operação
+3. O sistema informa a quantidade de posições recomendadas para a operação, o custo total, a perda total em caso de operação interrompida, o lucro total considerando uma operação bem sucedida e a relação risco/retorno
+4. O usuário pode inserir novos valores (retorna para 1)
+
+Extensões:
+
+1a: O usuário já informou anteriormente o valor de capital total
+        .1: O sistema preenche automaticamente o valor do capital total
+        .2: O usuário informa os demais valores necessários
+        .3: Retorna para 3
+
+1b: O usuário não informa o capital total
+        .1: O usuário solicita detalhes sobre a operação
+        .2: O sistema informa que é necessário informar o valor do capital total
+        .3: Retorna para 1
+
+1c: O usuário não informa o preço alvo
+        .1: O usuário informa apenas capital total, preço de entrada e stop loss
+        .2: O usuário solicita detalhes sobre a operação
+        .3: O sistema informa a quantidade de posições recomendadas para a operação, o custo total e a perda total em caso de operação interrompida
+        .4: O sistema informa que sem o preço alvo é impossível calcular o lucro total e a relação risco/retorno
+        .5: Retorna para 1
+
+1d: O usuário não informa o stop loss
+        .1: O usuário solicita detalhes sobre a operação
+        .2: O sistema informa que é necessário um valor para o campo de stop loss
+        .3: Retorna para 1
+
+1e: O usuário não informa o preço de entrada
+        .1: O usuário solicita detalhes sobre a operação
+        .2: O sistema informa que é necessário um valor para o campo de preço de entrada
+        .3: Retorna para 1
