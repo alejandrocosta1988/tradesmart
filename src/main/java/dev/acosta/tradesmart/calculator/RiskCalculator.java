@@ -56,28 +56,36 @@ public class RiskCalculator {
 
     public BigDecimal calculatePossibleLoss() {
         BigDecimal maxCapital = getMaxCapitalAtRisk();
-        BigDecimal positionSizeByRisk = capitalAtRisk.divideToIntegralValue(enterPrice.subtract(stopLoss));
+        BigDecimal lossPerPosition = getPriceDifference(enterPrice, stopLoss);
         BigDecimal positionSizeByCapital = maxCapital.divideToIntegralValue(enterPrice);
-        BigDecimal totalCostByRisk = enterPrice.multiply(positionSizeByRisk);
+        BigDecimal totalCostByRisk = enterPrice.multiply(getPositionSizeByRisk(lossPerPosition));
         if (totalCostByRisk.compareTo(maxCapital) < 0) {
-            return enterPrice.subtract(stopLoss).multiply(positionSizeByRisk);
+            return lossPerPosition.multiply(getPositionSizeByRisk(lossPerPosition));
         }
-        return enterPrice.subtract(stopLoss).multiply(positionSizeByCapital);
+        return lossPerPosition.multiply(positionSizeByCapital);
     }
+
+    private BigDecimal getPriceDifference(BigDecimal buyPrice, BigDecimal sellPrice) {
+        return buyPrice.subtract(sellPrice).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    private BigDecimal getPositionSizeByRisk(BigDecimal lossPerPosition) {
+        return capitalAtRisk.divideToIntegralValue(lossPerPosition);
+    }
+
+
 
     public BigDecimal calculatePossibleProfit() {
         BigDecimal maxCapital = getMaxCapitalAtRisk();
-        BigDecimal positionSizeByRisk = capitalAtRisk.divideToIntegralValue(enterPrice.subtract(stopLoss));
+        BigDecimal lossPerPosition = getPriceDifference(enterPrice, stopLoss);
         BigDecimal positionSizeByCapital = maxCapital.divideToIntegralValue(enterPrice);
-        BigDecimal totalCostByRisk = enterPrice.multiply(positionSizeByRisk);
+        BigDecimal totalCostByRisk = enterPrice.multiply(getPositionSizeByRisk(lossPerPosition));
         if (totalCostByRisk.compareTo(maxCapital) < 0) {
-            return targetPrice.subtract(enterPrice).multiply(positionSizeByRisk).setScale(2, RoundingMode.HALF_UP);
+            return targetPrice.subtract(enterPrice).multiply(getPositionSizeByRisk(lossPerPosition)).setScale(2, RoundingMode.HALF_UP);
         }
         return targetPrice.subtract(enterPrice).multiply(positionSizeByCapital).setScale(2, RoundingMode.HALF_UP);
     }
 
-    private BigDecimal getPriceDifference(BigDecimal buyPrice, BigDecimal sellPrice) {
-        return sellPrice.subtract(buyPrice).setScale(2, RoundingMode.HALF_UP);
-    }
+
 
 }
