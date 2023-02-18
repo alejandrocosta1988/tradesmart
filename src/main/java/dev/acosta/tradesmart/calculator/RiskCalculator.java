@@ -13,6 +13,7 @@ public class RiskCalculator {
 
     private BigDecimal enterPrice;
     private BigDecimal stopLoss;
+    private BigDecimal targetPrice;
 
     public BigDecimal getTotalCapital() {
         return totalCapital;
@@ -49,6 +50,10 @@ public class RiskCalculator {
         stopLoss = new BigDecimal(Double.toString(loss)).setScale(2, RoundingMode.HALF_UP);
     }
 
+    public void setTargetPrice(double price) {
+        targetPrice = new BigDecimal(Double.toString(price)).setScale(2, RoundingMode.HALF_UP);
+    }
+
     public BigDecimal calculatePossibleLoss() {
         BigDecimal maxCapital = getMaxCapitalAtRisk();
         BigDecimal positionSizeByRisk = capitalAtRisk.divideToIntegralValue(enterPrice.subtract(stopLoss));
@@ -58,6 +63,12 @@ public class RiskCalculator {
             return enterPrice.subtract(stopLoss).multiply(positionSizeByRisk);
         }
         return enterPrice.subtract(stopLoss).multiply(positionSizeByCapital);
+    }
+
+    public BigDecimal calculatePossibleProfit() {
+        BigDecimal maxCapital = getMaxCapitalAtRisk();
+        BigDecimal positionSizeByCapital = maxCapital.divideToIntegralValue(enterPrice);
+        return targetPrice.subtract(enterPrice).multiply(positionSizeByCapital).setScale(2, RoundingMode.HALF_UP);
     }
 
     private BigDecimal getPriceDifference(BigDecimal buyPrice, BigDecimal sellPrice) {

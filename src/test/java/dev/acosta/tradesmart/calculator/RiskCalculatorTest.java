@@ -1,6 +1,7 @@
 package dev.acosta.tradesmart.calculator;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -68,6 +69,17 @@ public class RiskCalculatorTest {
         calculator.setTotalCapital(1000d);
         BigDecimal possibleLoss = new BigDecimal(Double.toString(9.36)).setScale(2, RoundingMode.HALF_UP);
         assertEquals(possibleLoss, calculator.calculatePossibleLoss());
+    }
+
+    @Test
+    @DisplayName("Calculates possible profit by max capital at risk")
+    void givenAnEnterPriceAndTargetPriceAndTotalCapital_IfTotalCostIsHigherThanMaxCapitalAtRisk_ThenPossibleProfitIsCalculatedByMaxCapitalAtRisk() {
+        calculator.setEnterPrice(20d);
+        calculator.setStopLoss(19.50);
+        calculator.setTotalCapital(1000d);
+        calculator.setTargetPrice(23.50);
+        BigDecimal possibleProfit = new BigDecimal(Double.toString(52.50)).setScale(2, RoundingMode.HALF_UP);
+        assertEquals(possibleProfit, calculator.calculatePossibleProfit(), "Calculated profit should be 52.50");
     }
 
 
