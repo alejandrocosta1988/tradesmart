@@ -72,14 +72,25 @@ public class RiskCalculatorTest {
     }
 
     @Test
-    @DisplayName("Calculates possible profit by max capital at risk")
-    void givenAnEnterPriceAndTargetPriceAndTotalCapital_IfTotalCostIsHigherThanMaxCapitalAtRisk_ThenPossibleProfitIsCalculatedByMaxCapitalAtRisk() {
+    @DisplayName("Calculates possible profit by max capital at risk (30% of total capital)")
+    void givenAnEnterPriceAndStopLossAndTargetPriceAndTotalCapital_IfTotalCostIsHigherThanMaxCapitalAtRisk_ThenPossibleProfitIsCalculatedByMaxCapitalAtRisk() {
         calculator.setEnterPrice(20d);
         calculator.setStopLoss(19.50);
         calculator.setTotalCapital(1000d);
         calculator.setTargetPrice(23.50);
         BigDecimal possibleProfit = new BigDecimal(Double.toString(52.50)).setScale(2, RoundingMode.HALF_UP);
         assertEquals(possibleProfit, calculator.calculatePossibleProfit(), "Calculated profit should be 52.50");
+    }
+
+    @Test
+    @DisplayName("Calculates possible profit by risk per trade (1% of total capital)")
+    void givenAnEnterPriceAndStopLossAndTargetPriceAndTotalCapital_IfMaxCapitalAtRiskIsHigherThanTotalCost_ThenPossibleProfitIsCalculatedByRiskPerTrade() {
+        calculator.setEnterPrice(32.01);
+        calculator.setStopLoss(30.45);
+        calculator.setTargetPrice(34.19);
+        calculator.setTotalCapital(1000d);
+        BigDecimal possibleProfit = new BigDecimal(Double.toString(13.08)).setScale(2, RoundingMode.HALF_UP);
+        assertEquals(possibleProfit, calculator.calculatePossibleProfit(), "Possible profit should be 13.08");
     }
 
 

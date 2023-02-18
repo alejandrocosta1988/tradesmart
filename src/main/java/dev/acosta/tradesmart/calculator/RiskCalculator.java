@@ -67,7 +67,12 @@ public class RiskCalculator {
 
     public BigDecimal calculatePossibleProfit() {
         BigDecimal maxCapital = getMaxCapitalAtRisk();
+        BigDecimal positionSizeByRisk = capitalAtRisk.divideToIntegralValue(enterPrice.subtract(stopLoss));
         BigDecimal positionSizeByCapital = maxCapital.divideToIntegralValue(enterPrice);
+        BigDecimal totalCostByRisk = enterPrice.multiply(positionSizeByRisk);
+        if (totalCostByRisk.compareTo(maxCapital) < 0) {
+            return targetPrice.subtract(enterPrice).multiply(positionSizeByRisk).setScale(2, RoundingMode.HALF_UP);
+        }
         return targetPrice.subtract(enterPrice).multiply(positionSizeByCapital).setScale(2, RoundingMode.HALF_UP);
     }
 
