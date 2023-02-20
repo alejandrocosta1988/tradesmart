@@ -23,11 +23,13 @@ public class RiskCalculatorTest {
     }
 
     @Test
+    @DisplayName("Calculator is created with no total capital")
     void givenANewCalculator_ThenTotalCapitalIsSetToZero() {
         assertEquals(new BigDecimal(Double.toString(0d)).setScale(2, RoundingMode.HALF_UP), calculator.getTotalCapital());
     }
 
     @Test
+    @DisplayName("Sets total capital")
     void givenACalculator_ThenTotalCapitalCanBeSet() {
         BigDecimal newCapital = new BigDecimal(Double.toString(4300d))
                 .setScale(2, RoundingMode.HALF_UP);
@@ -36,17 +38,20 @@ public class RiskCalculatorTest {
     }
 
     @Test
+    @DisplayName("Risk per trade is set at 1% by default")
     void givenANewCalculator_ThenRiskPerTradeIsSetAtOnePercentByDefault() {
         assertEquals(DEFAULT_RISK_PER_TRADE, calculator.getRiskPerTrade());
     }
 
     @Test
+    @DisplayName("Sets risk per trade")
     void givenACalculator_ThenRiskPerTradeCanBeSet() {
         calculator.setRiskPerTrade(0.05);
         assertEquals(CUSTOMIZED_RISK_PER_TRADE, calculator.getRiskPerTrade());
     }
 
     @Test
+    @DisplayName("Max capital at risk is set at 30% by default")
     void givenANewCalculator_ThenMaxCapitalAtRiskIsSetAt30PercentOfTheCapitalByDefault() {
         calculator.setTotalCapital(1000d);
         BigDecimal capitalAtRisk = new BigDecimal(Double.toString(300d)).setScale(2, RoundingMode.HALF_UP);
@@ -54,6 +59,7 @@ public class RiskCalculatorTest {
     }
 
     @Test
+    @DisplayName("Calculates possible loss by maximum capital at risk")
     void givenAnEnterPriceAndStopLossAndTotalCapital_IfTotalCostIsHigherThanMaxCapitalAtRisk_ThenPossibleLossIsCalculatedByMaxCapitalAtRisk() {
         calculator.setEnterPrice(20d);
         calculator.setStopLoss(19.50);
@@ -63,6 +69,7 @@ public class RiskCalculatorTest {
     }
 
     @Test
+    @DisplayName("Calculates possible loss by risk per trade")
     void givenAnEnterPriceAndStopLossAndTotalCapital_IfMaxCapitalAtRiskIsHigherThanTotalCost_ThenPossibleLossIsCalculatedByRiskPerTrade() {
         calculator.setEnterPrice(32.01);
         calculator.setStopLoss(30.45);
