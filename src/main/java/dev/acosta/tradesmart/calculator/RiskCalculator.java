@@ -92,8 +92,8 @@ public class RiskCalculator {
 
     public BigDecimal calculatePossibleProfit() {
         if (isTotalCostAcceptable(getTotalCostByRisk()))
-            return getPriceDifference().multiply(getPositionSizeByRisk()).setScale(2, RoundingMode.HALF_UP);
-        return getPriceDifference().multiply(getPositionSizeByCapital()).setScale(2, RoundingMode.HALF_UP);
+            return getPriceDifference().multiply(getPositionSizeByRisk());
+        return getPriceDifference().multiply(getPositionSizeByCapital());
     }
 
     private BigDecimal getPriceDifference() {
