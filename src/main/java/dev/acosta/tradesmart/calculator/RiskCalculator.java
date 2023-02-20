@@ -38,11 +38,6 @@ public class RiskCalculator {
         riskPerTrade = new BigDecimal(Double.toString(customRiskPerTrade));
     }
 
-    public BigDecimal getMaxCapitalAtRisk() {
-        return maxCapitalAtRisk.multiply(totalCapital)
-                .setScale(2, RoundingMode.HALF_UP);
-    }
-
     public void setEnterPrice(double price) {
         enterPrice = new BigDecimal(Double.toString(price)).setScale(2, RoundingMode.HALF_UP);
     }
@@ -66,6 +61,23 @@ public class RiskCalculator {
         return getLossByCapital();
     }
 
+    private Boolean isTotalCostAcceptable(BigDecimal totalCost) {
+        return totalCost.compareTo(getMaxCapitalAtRisk()) < 0;
+    }
+
+    public BigDecimal getMaxCapitalAtRisk() {
+        return maxCapitalAtRisk.multiply(totalCapital)
+                .setScale(2, RoundingMode.HALF_UP);
+    }
+
+    private BigDecimal getTotalCostByRisk() {
+        return enterPrice.multiply(getPositionSizeByRisk());
+    }
+
+    private BigDecimal getPositionSizeByRisk() {
+        return capitalAtRisk.divideToIntegralValue(lossPerPosition);
+    }
+
     private BigDecimal getLossByRisk() {
         return lossPerPosition.multiply(getPositionSizeByRisk());
     }
@@ -78,30 +90,18 @@ public class RiskCalculator {
         return getMaxCapitalAtRisk().divideToIntegralValue(enterPrice);
     }
 
-    private BigDecimal getTotalCostByRisk() {
-        return enterPrice.multiply(getPositionSizeByRisk());
-    }
-
-    private Boolean isTotalCostAcceptable(BigDecimal totalCost) {
-        return totalCost.compareTo(getMaxCapitalAtRisk()) < 0;
-    }
-
-    private BigDecimal getPositionSizeByRisk() {
-        return capitalAtRisk.divideToIntegralValue(lossPerPosition);
-    }
-
     public BigDecimal calculatePossibleProfit() {
         if (isTotalCostAcceptable(getTotalCostByRisk()))
             return getProfitByRisk();
         return getProfitByCapital();
     }
 
-    private BigDecimal getPriceDifference() {
-        return targetPrice.subtract(enterPrice);
-    }
-
     private BigDecimal getProfitByRisk() {
         return getPriceDifference().multiply(getPositionSizeByRisk());
+    }
+
+    private BigDecimal getPriceDifference() {
+        return targetPrice.subtract(enterPrice);
     }
 
     private BigDecimal getProfitByCapital() {
