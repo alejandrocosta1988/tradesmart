@@ -92,12 +92,20 @@ public class RiskCalculator {
 
     public BigDecimal calculatePossibleProfit() {
         if (isTotalCostAcceptable(getTotalCostByRisk()))
-            return getPriceDifference().multiply(getPositionSizeByRisk());
-        return getPriceDifference().multiply(getPositionSizeByCapital());
+            return getProfitByRisk();
+        return getProfitByCapital();
     }
 
     private BigDecimal getPriceDifference() {
         return targetPrice.subtract(enterPrice);
+    }
+
+    private BigDecimal getProfitByRisk() {
+        return getPriceDifference().multiply(getPositionSizeByRisk());
+    }
+
+    private BigDecimal getProfitByCapital() {
+        return getPriceDifference().multiply(getPositionSizeByCapital());
     }
 
 }
