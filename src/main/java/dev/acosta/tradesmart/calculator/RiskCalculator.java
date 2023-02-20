@@ -66,10 +66,6 @@ public class RiskCalculator {
         return getLossByCapital();
     }
 
-    private BigDecimal getPriceDifference(BigDecimal buyPrice, BigDecimal sellPrice) {
-        return buyPrice.subtract(sellPrice).setScale(2, RoundingMode.HALF_UP);
-    }
-
     private BigDecimal getLossByRisk() {
         return lossPerPosition.multiply(getPositionSizeByRisk());
     }
@@ -96,10 +92,12 @@ public class RiskCalculator {
 
     public BigDecimal calculatePossibleProfit() {
         if (isTotalCostAcceptable(getTotalCostByRisk()))
-            return targetPrice.subtract(enterPrice).multiply(getPositionSizeByRisk()).setScale(2, RoundingMode.HALF_UP);
-        return targetPrice.subtract(enterPrice).multiply(getPositionSizeByCapital()).setScale(2, RoundingMode.HALF_UP);
+            return getPriceDifference().multiply(getPositionSizeByRisk()).setScale(2, RoundingMode.HALF_UP);
+        return getPriceDifference().multiply(getPositionSizeByCapital()).setScale(2, RoundingMode.HALF_UP);
     }
 
-
+    private BigDecimal getPriceDifference() {
+        return targetPrice.subtract(enterPrice);
+    }
 
 }
