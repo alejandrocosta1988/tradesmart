@@ -61,10 +61,8 @@ public class RiskCalculator {
     }
 
     public BigDecimal calculatePossibleLoss() {
-        BigDecimal totalCostByRisk = getTotalCostByRisk();
-        if (isTotalCostAcceptable(totalCostByRisk)) {
+        if (isTotalCostAcceptable(getTotalCostByRisk()))
             return lossPerPosition.multiply(getPositionSizeByRisk());
-        }
         return lossPerPosition.multiply(getPositionSizeByCapital());
     }
 
@@ -89,10 +87,8 @@ public class RiskCalculator {
     }
 
     public BigDecimal calculatePossibleProfit() {
-        BigDecimal totalCostByRisk = getTotalCostByRisk();
-        if (isTotalCostAcceptable(totalCostByRisk)) {
+        if (isTotalCostAcceptable(getTotalCostByRisk()))
             return targetPrice.subtract(enterPrice).multiply(getPositionSizeByRisk()).setScale(2, RoundingMode.HALF_UP);
-        }
         return targetPrice.subtract(enterPrice).multiply(getPositionSizeByCapital()).setScale(2, RoundingMode.HALF_UP);
     }
 
