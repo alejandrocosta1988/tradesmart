@@ -59,7 +59,7 @@ public class RiskCalculator {
         BigDecimal lossPerPosition = getPriceDifference(enterPrice, stopLoss);
         BigDecimal positionSizeByCapital = maxCapital.divideToIntegralValue(enterPrice);
         BigDecimal totalCostByRisk = enterPrice.multiply(getPositionSizeByRisk(lossPerPosition));
-        if (totalCostByRisk.compareTo(maxCapital) < 0) {
+        if (isTotalCostAcceptable(totalCostByRisk)) {
             return lossPerPosition.multiply(getPositionSizeByRisk(lossPerPosition));
         }
         return lossPerPosition.multiply(positionSizeByCapital);
@@ -69,18 +69,20 @@ public class RiskCalculator {
         return buyPrice.subtract(sellPrice).setScale(2, RoundingMode.HALF_UP);
     }
 
+    private Boolean isTotalCostAcceptable(BigDecimal totalCost) {
+        return totalCost.compareTo(getMaxCapitalAtRisk()) < 0;
+    }
+
     private BigDecimal getPositionSizeByRisk(BigDecimal lossPerPosition) {
         return capitalAtRisk.divideToIntegralValue(lossPerPosition);
     }
-
-
 
     public BigDecimal calculatePossibleProfit() {
         BigDecimal maxCapital = getMaxCapitalAtRisk();
         BigDecimal lossPerPosition = getPriceDifference(enterPrice, stopLoss);
         BigDecimal positionSizeByCapital = maxCapital.divideToIntegralValue(enterPrice);
         BigDecimal totalCostByRisk = enterPrice.multiply(getPositionSizeByRisk(lossPerPosition));
-        if (totalCostByRisk.compareTo(maxCapital) < 0) {
+        if (isTotalCostAcceptable(totalCostByRisk)) {
             return targetPrice.subtract(enterPrice).multiply(getPositionSizeByRisk(lossPerPosition)).setScale(2, RoundingMode.HALF_UP);
         }
         return targetPrice.subtract(enterPrice).multiply(positionSizeByCapital).setScale(2, RoundingMode.HALF_UP);
